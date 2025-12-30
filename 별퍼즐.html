@@ -1,0 +1,79 @@
+<head>
+    <style>
+        input{
+            position:absolute;
+        }
+        /*canvas{background-color:aqua;}*/
+        *{margin:0 0 0 0;}
+    </style>
+</head>
+<body>
+    <div style="position:relative; width:300px; height:300px;">
+        <canvas id="c" width="300" height="300"></canvas>
+        <input type="radio" id="0">
+        <input type="radio" id="1">
+        <input type="radio" id="2">
+        <input type="radio" id="3">
+        <input type="radio" id="4">
+    </div>
+    <h1 id="text">남은 횟수: 7</h1>
+    <script>
+        let canvas=document.getElementById("c");
+        let context=canvas.getContext("2d");
+        let tries=7;
+        for(let i=0;i<5;i++){
+            let id=document.getElementById(String(i));
+            id.style.left=150+100*Math.cos(-Math.PI/2+2*Math.PI/5*i)-5+"px";
+            id.style.top=150+100*Math.sin(-Math.PI/2+2*Math.PI/5*i)-5+"px";
+            id.addEventListener("click", e => {
+                if (tries<=0) {
+                    e.preventDefault();
+                }
+            });
+            id.addEventListener("change",()=>{
+                tries--;
+                document.getElementById("text").innerHTML="남은 횟수: "+tries;
+                let j=(i+2)%5;
+                let k=(i+3)%5
+                let id1=document.getElementById(String(j));
+                let id2=document.getElementById(String(k));
+                if(id1.checked) id1.checked=false;
+                else id1.checked=true;
+                if(id2.checked) id2.checked=false;
+                else id2.checked=true;
+                let flag=true;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                for(let a=0;a<5;a++){
+                    let b=(a+2)%5;
+                    let ida=document.getElementById(String(a));
+                    let idb=document.getElementById(String(b));
+                    if(ida.checked && idb.checked) context.strokeStyle="red";
+                    else{
+                        context.strokeStyle="black";
+                        flag=false;
+                    }
+                    context.beginPath();
+                    context.moveTo(150+100*Math.cos(-Math.PI/2+2*Math.PI/5*a),150+100*Math.sin(-Math.PI/2+2*Math.PI/5*a));
+                    context.lineTo(150+100*Math.cos(-Math.PI/2+2*Math.PI/5*b),150+100*Math.sin(-Math.PI/2+2*Math.PI/5*b));
+                    context.stroke();
+                }
+                if(flag){
+                    document.getElementById("text").innerHTML="CLEAR!!";
+                    return;
+                }
+                if(tries<=0){
+                    document.getElementById("text").innerHTML="FAIL!!";
+                    return;
+                }
+            });
+        }
+        for(let i=0;i<5;i++){
+            let j=(i+2)%5;
+            context.strokeStyle="black";
+            context.beginPath();
+            context.moveTo(150+100*Math.cos(-Math.PI/2+2*Math.PI/5*i),150+100*Math.sin(-Math.PI/2+2*Math.PI/5*i));
+            context.lineTo(150+100*Math.cos(-Math.PI/2+2*Math.PI/5*j),150+100*Math.sin(-Math.PI/2+2*Math.PI/5*j));
+            context.stroke();
+        }
+    </script>
+</body>
